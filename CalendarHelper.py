@@ -1,9 +1,18 @@
+   # --------------------------------------------------------------------------
+   # CalendarHelper.py
+   #
+   # Conglomeration of helper classes for the calendar event and attendee data
+   # types. 
+   #
+   # Last edited: 11.09.2013 - 09:19:10 AM - bmwong042
+   #
+   # --------------------------------------------------------------------------
+
 import datetime
 import calendar
 import time
 
-class Event(object)
-{
+class Event(object):
 
    # --------------------------------------------------------------------------
    # @params
@@ -68,12 +77,7 @@ class Event(object)
       return self.preferences[2]
 
    def contains_attendee(self, attendee_obj):
-      for (a in self.preferences[2])
-      {
-         if (a == attendee_obj)
-            return true
-      }
-      return false
+      return self.preferences[2].count(attendee_obj) != 0
 
 
    # times --------------------------------------------------------------------
@@ -84,28 +88,23 @@ class Event(object)
 
    def add_time(self, newTime):
       if (contains_time(self, newTime)):
-         self.preferences[3][newTime]++
-      else
+         self.preferences[3][newTime] += 1
+      else:
          self.preferences[3].insert(newTime, 1)
 
    # remove should be callable only by event owner. use check for that. 
    # TO DO. 
    def remove_time(self, time_rem):
-      if (contains_time(self, time_rem))
+      if (contains_time(self, time_rem)):
          del self.preferences[3][time_rem]
-      else
+      else:
          return
 
    def get_times(self):
       return self.preferences[3]
    
    def contains_time(self, o_time):
-      for (d in self.preferences[3])
-      {
-         if (d == o_time)
-            return true
-      }
-      return false
+      return self.preferences[3].count(oTime) != 0
 
 
    # suggestions --------------------------------------------------------------
@@ -120,23 +119,14 @@ class Event(object)
 
    def add_suggestion(self, str_sugg):
       if (contains_sugg(self, str_sugg)):
-         self.preferences[4][str_sugg]++
-      else
+         self.preferences[4][str_sugg] += 1
+      else:
          self.preferences[4].insert(str_sugg, 1)
 
    def contains_sugg(self, str_sugg):
-      for (s in self.preferences[4])
-      {
-         if (s == str_sugg)
-            return true
-      }
-      return false
+      self.preferences[4].count(str_sugg) != 0
 
-}
-
-
-class Attendee(object)
-{
+class Attendee(object):
    # @params
    #
    # data: aggregation of following variables - 
@@ -193,25 +183,20 @@ class Attendee(object)
    def add_time(self, o_newTime):
       if (contains_time(self, o_newTime)):
          self.information[2].append(o_newTime)
-      else
+      else:
          return
 
    def remove_time(self, time_rem):
-      if (contains_time(self, time_rem))
+      if (contains_time(self, time_rem)):
          self.information[2].remove(time_rem)
-      else
+      else:
          return
 
    def get_times(self):
       return self.information[2]
    
    def contains_time(self, o_time):
-      for (d in self.information[2])
-      {
-         if (d == o_time)
-            return true
-      }
-      return false
+      return self.information[2].count(o_time) != 0
 
    # comment ------------------------------------------------------------------
    #
@@ -224,16 +209,3 @@ class Attendee(object)
 
    def get_comment(self):
       return self.information[3]
-
-
-
-}
-
-# to do: hash function for a date to store values
-
-# list.insert(index, value)
-# dictionary = {key : value, key : value}
-# dictionary[key] - prints value mapped by key
-# str(notstringthing)
-# del dictionary[key] - removes that k/v pair
-# import math

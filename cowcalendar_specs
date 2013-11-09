@@ -13,20 +13,26 @@ Members:
 JSONs
 
 Event Object
-id			integer
+event_id			integer
 event_code		string
 times			array
-? preferences		hash{key = time, value = num_available}
+
+*****? preferences		hash{key = time, value = num_available}
 NOTE: This is combined into times...?
+
 attendees		array
-# suggestions?
+### suggestions?
  
+
 Attendee Object
-id			integer
+attendee_id			integer
 name			string
-attendee_code	string
+
+*****?? attendee_code	string
+
 available_times	array
 comment		text
+
 
 Future Ideas
 Prioritize Times
@@ -36,3 +42,28 @@ Activities/Food Choices/Other Preferences
 Email Notifications
 
 Time Zones?
+
+To do: 
+remove_time() needs to have a check for admin priv before calling
+hash functions
+
+suggest( suggestion)
+   if (suggestion exists)
+      update_suggestion(self, sugg, +1)
+   else
+      add_suggestion()
+
+remove (suggestion)
+   boolean hasSuggestedPreviously - contains time in attendees time list
+      updateSuggestion (self, sugg, -1)
+
+
+
+# Helpful methods
+
+# list.insert(index, value)
+# dictionary = {key : value, key : value}
+# dictionary[key] - prints value mapped by key
+# str(notstringthing)
+# del dictionary[key] - removes that k/v pair
+# import math
