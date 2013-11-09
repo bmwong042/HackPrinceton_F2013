@@ -9,53 +9,66 @@ class Event(object)
    #
    # preferences: aggregation of following variables - 
    #
-   # ------------------------------------------------------------------------
+   # --------------------------------------------------------------------------
    # self: modifying its own fields
-   # attendees: list - attendees for event
-   # times: dictionary - suggested times with freq [time(hashed), freq]
-   # suggestions: dictionary - suggested events (fixed), with freq [event,freq]
-   # ------------------------------------------------------------------------
+   #
+   # 0 - id: unique int identifier for event
+   # 1 - event_code: unique String name for event
+   # 2 - attendees: list - attendees for event
+   # 3 - times: dictionary - suggested times with freq [time(hashed), freq]
+   # 4 - suggestions: dictionary - suggested events (fixed), with freq [event,freq]
+   # --------------------------------------------------------------------------
    #
    # constructing a new self object - setting all preferences
 
-   def __init__(self, event_name, attendees, times, suggesjtions):
-      self.preferences = {event_name, attendees, times, suggestions}
+   def __init__(self, id, event_code, attendees, times, suggestions):
+      self.preferences = {id, event_code, attendees, times, suggestions}
 
-   # names -------------------------------------------------------------------
+   # ID -----------------------------------------------------------------------
 
-   # self.preferences[0] - event name (String - name)
+   # self.preferences[0] - event code (String - code)
 
-   def modify_name(self, newName):
-      self.preferences[0] = newName
+   def modify_id(self, newID):
+      self.preferences[0] = newID
+
+   # code (name) --------------------------------------------------------------
+
+   # self.preferences[1] - event code (String - code)
+
+   def modify_code(self, newCode):
+      self.preferences[1] = newCode
 
    # attendees ----------------------------------------------------------------
 
-   # self.preferences[1] - attendees (list - names)
+   # self.preferences[2] - attendees (list - names)
 
    def add_attendee(self, attendee_name):
-      self.preferences[1].append(attendee_name)
+      self.preferences[2].append(attendee_name)
 
    def remove_attendee(self, attendee_name):
       self.preferences.remove(attendee_name)
 
-   # times -------------------------------------------------------------------
+   # times --------------------------------------------------------------------
 
-   # self.preferences[2] - times (dict - times, freq)   
+   # self.preferences[3] - times (dict - [times, freq])   
 
    def contains_time(self, o_time):
-      for (d in self.preferences[2])
-         return true
+      for (d in self.preferences[3])
+      {
+         if (d.equals(o_time))
+            return true
+      }
       return false
 
-   def add_time(self, newTime)
-      if contains_time(self, newTime):
-         self.preferences[2][newTime]++
+   def add_time(self, newTime):
+      if (contains_time(self, newTime)):
+         self.preferences[3][newTime]++
       else
-         self.preferences[2].insert(newTime, 1)
+         self.preferences[3].insert(newTime, 1)
 
    # preferences --------------------------------------------------------------
      
-   # self.preferences[3] - suggestions (dict - sugg, freq)
+   # self.preferences[4] - suggestions (dict - [sugg, freq])
 
 
 }
