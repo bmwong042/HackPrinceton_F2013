@@ -4,8 +4,6 @@ import pymongo
  
 from pymongo import MongoClient
 
-
-
 def main(): 
 
 	# database for storing users

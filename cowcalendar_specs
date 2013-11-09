@@ -1,0 +1,36 @@
+NO GLOBAL VARIABLES
+NO MAGIC NUMBERS
+Work on non-master branches
+
+Members:
+	Michael Kim 		mjkim@	Freelancer
+	Doug Ashley 		daashley@	Calendar Multipicker
+	Brian Wong		bmwong@	Python Backend
+	Leo Tione		ltione@	Server
+	Michael Freyberger	bdf3@		Javascript Frontend
+	McKerven Ceme	mceme@	MongoDB
+
+JSONs
+
+Event Object
+id			integer
+event_code		string
+times			array
+preferences		hash{key = time, value = num_available}
+attendees		array
+ 
+Attendee Object
+id			integer
+name			string
+attendee_code	string
+available_times	array
+comment		text
+
+Future Ideas
+Prioritize Times
+Facebook Integration
+iOS / Android?
+Activities/Food Choices/Other Preferences
+Email Notifications
+
+Time Zones?
