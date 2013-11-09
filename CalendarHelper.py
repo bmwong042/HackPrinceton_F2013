@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
    # --------------------------------------------------------------------------
    # CalendarHelper.py
    #
@@ -9,39 +11,103 @@
    # --------------------------------------------------------------------------
 
 import datetime
-import calendar
 import time
+
+import calendar
+
+#  -----------------------------------------------------------------------------
+#
+#  Main
+#
+#  unit testing of methods
+#
+#  -----------------------------------------------------------------------------
+
+def main():
+   # Event:    def __init__(self, event_id, event_code, attendees, times, suggestions):
+   # Attendee: def __init__(self, attendee_id, name, available_times, comment):
+   
+   # setting up event ID and name
+
+   e_id = 1
+   e_code = "testcode"
+
+   e_attendees = []
+
+   # creating lists of attendees
+
+   for a in range(1, 12):
+      a_id = a
+      a_name = str(chr(97 + a))
+      a_times = []
+      for t in range(1, 11):
+         t_new_1 = datetime.time(t, t, t)
+         t_new_2 = datetime.time(t + 1, t + 1, t + 1)
+         a_times.append(t_new_1)
+         a_times.append(t_new_2)
+
+      a_comment = str(chr(97 + a))
+      
+      for t_obj in a_times:
+         print str(t_obj.hour) + ":" + str(t_obj.minute) + ":" + str(t_obj.second)
+
+      # printing attendee information
+
+      a_new = Attendee(a_id, a_name, a_times, a_comment)
+      e_attendees.append(a_new)
+
+
+   e_times = []
+   for tm in range(1, 11):
+      et_new = datetime.time(tm, tm, tm)
+      e_times.append(et_new)
+
+   e_suggestions = []
+   for i in range(1, 11):
+      e_sugg = str(chr(97 + a))
+      e_suggestions.append(e_sugg)
+
+   e_obj = Event(e_id, e_code, e_attendees, e_times, e_suggestions)
+
+   for var in e_obj.preferences:
+      print var
+
 
 class Event(object):
 
-   # --------------------------------------------------------------------------
-   # @params
+   #  --------------------------------------------------------------------------
+   #  
+   #  Event
    #
-   # preferences: aggregation of following variables - 
+   #  @params
    #
-   # --------------------------------------------------------------------------
-   # self: modifying its own fields
+   #  preferences: aggregation of following variables - 
    #
-   # 0 - id: unique int identifier for event
-   # 1 - event_code: unique String event_name 
-   # 2 - attendees: list - attendees objs. 
-   # 3 - times: dictionary - suggested times with freq [time obj., freq]
-   # 4 - suggestions: dictionary - suggested events (fixed), with freq [event,freq]
+   #  --------------------------------------------------------------------------
+   #  self: modifying its own fields
    #
-   # --------------------------------------------------------------------------
+   #  0 - id: unique int identifier for event
+   #  1 - event_code: unique String event_name 
+   #  2 - attendees: list - attendees objs. 
+   #  3 - times: dictionary - suggested times with freq [time obj., freq]
+   #  4 - suggestions: dictionary - suggested events (fixed), with freq [event,freq]
    #
-   # constructing a new self event object - setting all preferences
+   #  --------------------------------------------------------------------------
    #
-   # --------------------------------------------------------------------------
-
+   #  constructing a new self event object - setting all preferences
+   #
+   #  --------------------------------------------------------------------------
+	
    def __init__(self, event_id, event_code, attendees, times, suggestions):
-      self.preferences = {id, event_code, attendees, times, suggestions}
+      self.preferences = [id, event_code, attendees, times, suggestions]
 
-   # ID -----------------------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # self.preferences[0] - event code (String - code)
+   #  IDs
    #
-   # --------------------------------------------------------------------------
+   #  self.preferences[0] - event code (String - code)
+   #
+   #  --------------------------------------------------------------------------
 
    def set_id(self, newID):
       self.preferences[0] = newID
@@ -50,9 +116,13 @@ class Event(object):
       return self.preferences[0]
 
 
-   # event_code (name) --------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # self.preferences[1] - event code (String - code)
+   #  Event Code (i.e. name)
+   #
+   #  self.preferences[1] - event code (String - code)
+   #
+   #  --------------------------------------------------------------------------   
 
    def set_code(self, newCode):
       self.preferences[1] = newCode
@@ -61,17 +131,23 @@ class Event(object):
       return self.preferences[1]
 
 
-   # attendees ----------------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # self.preferences[2] - attendees (list - objs)
+   #  Attendees
    #
-   # --------------------------------------------------------------------------
+   #  self.preferences[2] - attendees (list - objs)
+   #
+   #  --------------------------------------------------------------------------
 
    def add_attendee(self, attendee_obj):
+      if contains_attendee(self, attendee_obj):
+         return
       self.preferences[2].append(attendee_obj)
 
    def remove_attendee(self, attendee_obj):
-      self.preferences[2].remove(attendee_obj)
+      if contains_attendee(self, attendee_obj):
+         self.preferences[2].remove(attendee_obj)
+      return
 
    def get_all_attendees(self):
       return self.preferences[2]
@@ -80,14 +156,16 @@ class Event(object):
       return self.preferences[2].count(attendee_obj) != 0
 
 
-   # times --------------------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # self.preferences[3] - times (dict - [times, freq])   
+   #  Times
    #
-   # --------------------------------------------------------------------------
+   #  self.preferences[3] - times (dict - [times, freq])   
+   #
+   #  --------------------------------------------------------------------------
 
    def add_time(self, newTime):
-      if (contains_time(self, newTime)):
+      if contains_time(self, newTime):
          self.preferences[3][newTime] += 1
       else:
          self.preferences[3].insert(newTime, 1)
@@ -95,7 +173,7 @@ class Event(object):
    # remove should be callable only by event owner. use check for that. 
    # TO DO. 
    def remove_time(self, time_rem):
-      if (contains_time(self, time_rem)):
+      if contains_time(self, time_rem):
          del self.preferences[3][time_rem]
       else:
          return
@@ -107,15 +185,17 @@ class Event(object):
       return self.preferences[3].count(oTime) != 0
 
 
-   # suggestions --------------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # ----- can be commented out if undesired -----
+   #  Suggestions
    #
-   # self.preferences[4] - suggestions (dict - [sugg, freq])
+   #  ----- can be commented out if undesired -----
    #
-   # following two methods are used for if the suggestions are open to all
+   #  self.preferences[4] - suggestions (dict - [sugg, freq])
    #
-   # --------------------------------------------------------------------------
+   #  following two methods are used for if the suggestions are open to all
+   #
+   #  --------------------------------------------------------------------------
 
    def add_suggestion(self, str_sugg):
       if (contains_sugg(self, str_sugg)):
@@ -127,33 +207,38 @@ class Event(object):
       self.preferences[4].count(str_sugg) != 0
 
 class Attendee(object):
-   # @params
+
+   #  --------------------------------------------------------------------------
+   #  
+   #  Attendee
    #
-   # data: aggregation of following variables - 
+   #  @params
    #
-   # --------------------------------------------------------------------------
-   # self: modifying its own fields
+   #  data: aggregation of following variables - 
    #
-   # 0 - attendee_id: unique int identifier for each attendee
-   # 1 - name: unique String name
-   # 2 - attendees: list - attendees objs. 
-   # 3 - available_ times: list - all times for which they are free
-   # 4 - comment: String - their comment on the event
+   #  --------------------------------------------------------------------------
+   #  self: modifying its own fields
    #
-   # --------------------------------------------------------------------------
+   #  0 - attendee_id: unique int identifier for each attendee
+   #  1 - name: unique String name
+   #  2 - attendees: list - attendees objs. 
+   #  3 - available_ times: list - all times for which they are free
+   #  4 - comment: String - their comment on the event
    #
-   # constructing a new attendee object - setting all preferences
+   #  --------------------------------------------------------------------------
    #
-   # --------------------------------------------------------------------------
+   #  constructing a new attendee object - setting all preferences
+   #
+   #  --------------------------------------------------------------------------
 
    def __init__(self, attendee_id, name, available_times, comment):
-      self.information = {attendee_id, name, available_times, comment}
+      self.information = [attendee_id, name, available_times, comment]
 
-   # ID -----------------------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # self.information[0] - int representation of unique ID
+   #  self.information[0] - int representation of unique ID
    #
-   # --------------------------------------------------------------------------
+   #  --------------------------------------------------------------------------
 
    def set_id(self, newID):
       self.information[0] = newID
@@ -162,11 +247,13 @@ class Attendee(object):
       return self.information[0]
 
 
-   # name ---------------------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # self.information[1] - String representation of name
+   #  Names
    #
-   # --------------------------------------------------------------------------
+   #  self.information[1] - String representation of name
+   #
+   #  --------------------------------------------------------------------------
 
    def set_name(self, str_name):
       self.information[1] = str_name
@@ -174,11 +261,13 @@ class Attendee(object):
    def get_name(self):
       return self.information[1]
 
-   # available_times ----------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # self.information[2] - avilable_times (list - time objs.)
+   #  Available Times
    #
-   # --------------------------------------------------------------------------
+   #  self.information[2] - available_times (list - time objs.)
+   #
+   #  --------------------------------------------------------------------------
 
    def add_time(self, o_newTime):
       if (contains_time(self, o_newTime)):
@@ -198,14 +287,19 @@ class Attendee(object):
    def contains_time(self, o_time):
       return self.information[2].count(o_time) != 0
 
-   # comment ------------------------------------------------------------------
+   #  --------------------------------------------------------------------------
    #
-   # self.information[3] - String representation of inserted comment
+   #  Comments
    #
-   # --------------------------------------------------------------------------
+   #  self.information[3] - String representation of inserted comment
+   #
+   #  --------------------------------------------------------------------------
 
    def set_comment(self, str_comment):
       self.information[3] = str_comment
 
    def get_comment(self):
       return self.information[3]
+
+if __name__ == "__main__":
+   main()

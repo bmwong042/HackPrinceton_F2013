@@ -1,0 +1,71 @@
+8.1.5. time Objects
+A time object represents a (local) time of day, independent of any particular day, and subject to adjustment via a tzinfo object.
+
+class datetime.time([hour[, minute[, second[, microsecond[, tzinfo]]]]])
+All arguments are optional. tzinfo may be None, or an instance of a tzinfo subclass. The remaining arguments may be ints or longs, in the following ranges:
+
+0 <= hour < 24
+0 <= minute < 60
+0 <= second < 60
+0 <= microsecond < 1000000.
+If an argument outside those ranges is given, ValueError is raised. All default to 0 except tzinfo, which defaults to None.
+
+Class attributes:
+
+time.min
+The earliest representable time, time(0, 0, 0, 0).
+
+time.max
+The latest representable time, time(23, 59, 59, 999999).
+
+time.resolution
+The smallest possible difference between non-equal time objects, timedelta(microseconds=1), although note that arithmetic on time objects is not supported.
+
+Instance attributes (read-only):
+
+time.hour
+In range(24).
+
+time.minute
+In range(60).
+
+time.second
+In range(60).
+
+time.microsecond
+In range(1000000).
+
+time.tzinfo
+The object passed as the tzinfo argument to the time constructor, or None if none was passed.
+
+Supported operations:
+
+comparison of time to time, where a is considered less than b when a precedes b in time. If one comparand is naive and the other is aware, TypeError is raised. If both comparands are aware, and have the same tzinfo attribute, the common tzinfo attribute is ignored and the base times are compared. If both comparands are aware and have different tzinfo attributes, the comparands are first adjusted by subtracting their UTC offsets (obtained from self.utcoffset()). In order to stop mixed-type comparisons from falling back to the default comparison by object address, when a time object is compared to an object of a different type, TypeError is raised unless the comparison is == or !=. The latter cases return False or True, respectively.
+hash, use as dict key
+efficient pickling
+in Boolean contexts, a time object is considered to be true if and only if, after converting it to minutes and subtracting utcoffset() (or 0 if that’s None), the result is non-zero.
+Instance methods:
+
+time.replace([hour[, minute[, second[, microsecond[, tzinfo]]]]])
+Return a time with the same value, except for those attributes given new values by whichever keyword arguments are specified. Note that tzinfo=None can be specified to create a naive time from an aware time, without conversion of the time data.
+
+time.isoformat()
+Return a string representing the time in ISO 8601 format, HH:MM:SS.mmmmmm or, if self.microsecond is 0, HH:MM:SS If utcoffset() does not return None, a 6-character string is appended, giving the UTC offset in (signed) hours and minutes: HH:MM:SS.mmmmmm+HH:MM or, if self.microsecond is 0, HH:MM:SS+HH:MM
+
+time.__str__()
+For a time t, str(t) is equivalent to t.isoformat().
+
+time.strftime(format)
+Return a string representing the time, controlled by an explicit format string. For a complete list of formatting directives, see section strftime() and strptime() Behavior.
+
+time.__format__(format)
+Same as time.strftime(). This makes it possible to specify format string for a time object when using str.format(). See section strftime() and strptime() Behavior.
+
+time.utcoffset()
+If tzinfo is None, returns None, else returns self.tzinfo.utcoffset(None), and raises an exception if the latter doesn’t return None or a timedelta object representing a whole number of minutes with magnitude less than one day.
+
+time.dst()
+If tzinfo is None, returns None, else returns self.tzinfo.dst(None), and raises an exception if the latter doesn’t return None, or a timedelta object representing a whole number of minutes with magnitude less than one day.
+
+time.tzname()
+If tzinfo is None, returns None, else returns self.tzinfo.tzname(None), or raises an exception if the latter doesn’t return None or a string object.
