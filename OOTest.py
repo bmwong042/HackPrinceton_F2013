@@ -4,8 +4,9 @@ import time
 
 class Event(object)
 {
+
+   # --------------------------------------------------------------------------
    # @params
-   #
    #
    # preferences: aggregation of following variables - 
    #
@@ -13,52 +14,73 @@ class Event(object)
    # self: modifying its own fields
    #
    # 0 - id: unique int identifier for event
-   # 1 - event_code: unique String name for event
-   # 2 - attendees: list - attendees for event
-   # 3 - times: dictionary - suggested times with freq [time(hashed), freq]
+   # 1 - event_code: unique String event_name 
+   # 2 - attendees: list - attendees objs. 
+   # 3 - times: dictionary - suggested times with freq [time obj., freq]
    # 4 - suggestions: dictionary - suggested events (fixed), with freq [event,freq]
+   #
    # --------------------------------------------------------------------------
    #
-   # constructing a new self object - setting all preferences
+   # constructing a new self event object - setting all preferences
+   #
+   # --------------------------------------------------------------------------
 
-   def __init__(self, id, event_code, attendees, times, suggestions):
+   def __init__(self, event_id, event_code, attendees, times, suggestions):
       self.preferences = {id, event_code, attendees, times, suggestions}
 
    # ID -----------------------------------------------------------------------
-
+   #
    # self.preferences[0] - event code (String - code)
+   #
+   # --------------------------------------------------------------------------
 
-   def modify_id(self, newID):
+   def set_id(self, newID):
       self.preferences[0] = newID
 
-   # code (name) --------------------------------------------------------------
+   def get_id(self):
+      return self.preferences[0]
 
+
+   # event_code (name) --------------------------------------------------------
+   #
    # self.preferences[1] - event code (String - code)
 
-   def modify_code(self, newCode):
+   def set_code(self, newCode):
       self.preferences[1] = newCode
 
+   def get_code(self):
+      return self.preferences[1]
+
+
    # attendees ----------------------------------------------------------------
+   #
+   # self.preferences[2] - attendees (list - objs)
+   #
+   # --------------------------------------------------------------------------
 
-   # self.preferences[2] - attendees (list - names)
+   def add_attendee(self, attendee_obj):
+      self.preferences[2].append(attendee_obj)
 
-   def add_attendee(self, attendee_name):
-      self.preferences[2].append(attendee_name)
+   def remove_attendee(self, attendee_obj):
+      self.preferences[2].remove(attendee_obj)
 
-   def remove_attendee(self, attendee_name):
-      self.preferences.remove(attendee_name)
+   def get_all_attendees(self):
+      return self.preferences[2]
 
-   # times --------------------------------------------------------------------
-
-   # self.preferences[3] - times (dict - [times, freq])   
-
-   def contains_time(self, o_time):
-      for (d in self.preferences[3])
+   def contains_attendee(self, attendee_obj):
+      for (a in self.preferences[2])
       {
-         if (d.equals(o_time))
+         if (a == attendee_obj)
             return true
       }
       return false
+
+
+   # times --------------------------------------------------------------------
+   #
+   # self.preferences[3] - times (dict - [times, freq])   
+   #
+   # --------------------------------------------------------------------------
 
    def add_time(self, newTime):
       if (contains_time(self, newTime)):
@@ -66,16 +88,145 @@ class Event(object)
       else
          self.preferences[3].insert(newTime, 1)
 
-   # preferences --------------------------------------------------------------
-     
-   # self.preferences[4] - suggestions (dict - [sugg, freq])
+   # remove should be callable only by event owner. use check for that. 
+   # TO DO. 
+   def remove_time(self, time_rem):
+      if (contains_time(self, time_rem))
+         del self.preferences[3][time_rem]
+      else
+         return
 
+   def get_times(self):
+      return self.preferences[3]
+   
+   def contains_time(self, o_time):
+      for (d in self.preferences[3])
+      {
+         if (d == o_time)
+            return true
+      }
+      return false
+
+
+   # suggestions --------------------------------------------------------------
+   #
+   # ----- can be commented out if undesired -----
+   #
+   # self.preferences[4] - suggestions (dict - [sugg, freq])
+   #
+   # following two methods are used for if the suggestions are open to all
+   #
+   # --------------------------------------------------------------------------
+
+   def add_suggestion(self, str_sugg):
+      if (contains_sugg(self, str_sugg)):
+         self.preferences[4][str_sugg]++
+      else
+         self.preferences[4].insert(str_sugg, 1)
+
+   def contains_sugg(self, str_sugg):
+      for (s in self.preferences[4])
+      {
+         if (s == str_sugg)
+            return true
+      }
+      return false
 
 }
 
-class Date(object)
+
+class Attendee(object)
 {
+   # @params
+   #
+   # data: aggregation of following variables - 
+   #
+   # --------------------------------------------------------------------------
+   # self: modifying its own fields
+   #
+   # 0 - attendee_id: unique int identifier for each attendee
+   # 1 - name: unique String name
+   # 2 - attendees: list - attendees objs. 
+   # 3 - available_ times: list - all times for which they are free
+   # 4 - comment: String - their comment on the event
+   #
+   # --------------------------------------------------------------------------
+   #
+   # constructing a new attendee object - setting all preferences
+   #
+   # --------------------------------------------------------------------------
+
+   def __init__(self, attendee_id, name, available_times, comment):
+      self.information = {attendee_id, name, available_times, comment}
+
+   # ID -----------------------------------------------------------------------
+   #
+   # self.information[0] - int representation of unique ID
+   #
+   # --------------------------------------------------------------------------
+
+   def set_id(self, newID):
+      self.information[0] = newID
+
+   def get_id(self):
+      return self.information[0]
+
+
+   # name ---------------------------------------------------------------------
+   #
+   # self.information[1] - String representation of name
+   #
+   # --------------------------------------------------------------------------
+
+   def set_name(self, str_name):
+      self.information[1] = str_name
+
+   def get_name(self):
+      return self.information[1]
+
+   # available_times ----------------------------------------------------------
+   #
+   # self.information[2] - avilable_times (list - time objs.)
+   #
+   # --------------------------------------------------------------------------
+
+   def add_time(self, o_newTime):
+      if (contains_time(self, o_newTime)):
+         self.information[2].append(o_newTime)
+      else
+         return
+
+   def remove_time(self, time_rem):
+      if (contains_time(self, time_rem))
+         self.information[2].remove(time_rem)
+      else
+         return
+
+   def get_times(self):
+      return self.information[2]
    
+   def contains_time(self, o_time):
+      for (d in self.information[2])
+      {
+         if (d == o_time)
+            return true
+      }
+      return false
+
+   # comment ------------------------------------------------------------------
+   #
+   # self.information[3] - String representation of inserted comment
+   #
+   # --------------------------------------------------------------------------
+
+   def set_comment(self, str_comment):
+      self.information[3] = str_comment
+
+   def get_comment(self):
+      return self.information[3]
+
+
+
 }
 
 # to do: hash function for a date to store values

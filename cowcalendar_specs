@@ -6,7 +6,7 @@ Members:
 	Michael Kim 		mjkim@	Freelancer
 	Doug Ashley 		daashley@	Calendar Multipicker
 	Brian Wong		bmwong@	Python Backend
-	Leo Tione		ltione@	Server
+	Leo Tinone		ltione@	Server
 	Michael Freyberger	bdf3@		Javascript Frontend
 	McKerven Ceme	mceme@	MongoDB
 
@@ -16,8 +16,10 @@ Event Object
 id			integer
 event_code		string
 times			array
-preferences		hash{key = time, value = num_available}
+? preferences		hash{key = time, value = num_available}
+NOTE: This is combined into times...?
 attendees		array
+# suggestions?
  
 Attendee Object
 id			integer
