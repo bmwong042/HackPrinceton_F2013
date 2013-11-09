@@ -1,6 +1,23 @@
+function Rect(xmin, ymin, xmax, ymax) {
+	this.xmin = xmin;
+	this.xmax = xmax;
+	this.ymin = ymin;
+	this.ymax = ymax;
+}
+var outerTable;
+$( document ).ready(function() {
+  	var elem = document.getElementById("test").getBoundingClientRect();
+    outerTable = new Rect(elem.left, elem.bottom, elem.right, elem.top); 
+    console.log(JSON.stringify(outerTable, null, 4));
+});
+  
 var startPos = new Array();
 var endPos = new Array();
 var isMouseDown = false;
+function intersects(pageRect, userRect) {
+	  return pageRect.xmax >= userRect.xmin && pageRect.ymax <= userRect.ymin
+            && userRect.xmax >= pageRect.xmin && userRect.ymax <= pageRect.ymin;
+}
 document.onmousedown = function(e) { 
 	isMouseDown = true;
 	startPos[0] = e.pageX;
@@ -13,7 +30,7 @@ document.onmouseup   = function(e) {
 	endPos[1] = e.pageY; 
 	var rect = new Object();
 	rect.setParams = function(startPos, endPos) {
-		if (startPos[0] < endPos[0]) {
+		if (startPos[0] <= endPos[0]) {
 			rect.xmin = startPos[0];
 			rect.xmax = endPos[0];
 		}
@@ -21,7 +38,7 @@ document.onmouseup   = function(e) {
 			rect.xmin = endPos[0];
 			rect.xmax = startPos[0];
 		}
-		if (startPos[1] < endPos[1]) {
+		if (startPos[1] >= endPos[1]) {
 			rect.ymin = startPos[1];
 			rect.ymax = endPos[1];
 		}
@@ -33,8 +50,8 @@ document.onmouseup   = function(e) {
 
 	}
 	rect.setParams(startPos, endPos);
-	rect.getParams = function() {
-		return "xmin: " + rect.xmin + " xmax: " + rect.xmax + " ymin: " + rect.ymin + " ymax: " + rect.ymax; 
-	}
-	alert(rect.getParams());
+	console.log(JSON.stringify(rect, null, 4));
+	alert(intersects(outerTable, rect));
+
+	
 };	
