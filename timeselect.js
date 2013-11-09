@@ -1,14 +1,25 @@
+
 function Rect(xmin, ymin, xmax, ymax) {
 	this.xmin = xmin;
 	this.xmax = xmax;
 	this.ymin = ymin;
 	this.ymax = ymax;
 }
-var outerTable;
+var timeSlots = new Array();
 $( document ).ready(function() {
-  	var elem = document.getElementById("test").getBoundingClientRect();
-    outerTable = new Rect(elem.left, elem.bottom, elem.right, elem.top); 
-    console.log(JSON.stringify(outerTable, null, 4));
+	
+  	var elem = document.getElementsByTagName("td");
+  	for(var j = 0; j < elem.length; j++) {
+  		var bounding = elem[j].getBoundingClientRect();
+  		var tempRect = new Rect(bounding.left, bounding.bottom, bounding.right, bounding.top);
+  		tempRect.id = j + '';
+  		tempRect.selected = false;
+  		timeSlots.push(tempRect);
+  	}
+  	console.log(JSON.stringify(timeSlots, null, 4));
+
+//    outerTable = new Rect(elem.left, elem.bottom, elem.right, elem.top); 
+    //console.log(JSON.stringify(outerTable, null, 4));
 });
   
 var startPos = new Array();
@@ -50,8 +61,15 @@ document.onmouseup   = function(e) {
 
 	}
 	rect.setParams(startPos, endPos);
-	console.log(JSON.stringify(rect, null, 4));
-	alert(intersects(outerTable, rect));
-
+	for (var j = 0; j < timeSlots.length; j++) {
+		if (intersects(timeSlots[j], rect) && timeSlots[j].selected == false) {
+			document.getElementById(timeSlots[j].id).style.backgroundColor = "#b0c4de";
+			timeSlots[j].selected = true;
+		}
+		else if (intersects(timeSlots[j], rect) && timeSlots[j].selected == true) {
+			document.getElementById(timeSlots[j].id).style.backgroundColor = "#ffffff";
+			timeSlots[j].selected = false;
+		}
+	}
 	
 };	
