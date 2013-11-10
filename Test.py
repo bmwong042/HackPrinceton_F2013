@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import bottle
 import pymongo
-
+ 
 from pymongo import MongoClient
 
-def main():
+def main(): 
 
 	# database for storing users
 
